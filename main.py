@@ -3,16 +3,16 @@ from sys import stdout
 import numpy as np
 from math import exp
 from matplotlib import pyplot as plt
-from Cell import Cell
+from cell import Cell
 from pprint import pprint
 from utils import has_more_candidates, min_mean, get_result_image
 
-alpha         = 0.4
-min_contrast  = 200
+alpha         = 0.8
+min_contrast  = 90
 min_size      = 10
 h             = 0
-MAX_LEVEL     = 2
-path          = 'images/house.bmp'
+MAX_LEVEL     = 3
+path          = 'images/test-image1.jpg'
 input_image   = cv2.imread(path, 0)
 #input_image   = cv2.resize(input_image, (200, 200), interpolation=cv2.INTER_CUBIC)
 rows, cols    = input_image.shape
@@ -64,8 +64,9 @@ while(h < MAX_LEVEL):
                 # the cell is a root
                 cell.p = 2
             else:
+                # connect the nonsurviving to the surviving
                 cell.parent = surv
-    # connect the nonsurviving to the surviving
+    # connecting the surviving cells to each other
     for cell in graph:
         if(cell.p == 0):
             for ncell in cell.support:
@@ -108,7 +109,7 @@ plt.title("Original")
 plt.imshow(result_images[0], cmap='gray')
 fig.add_subplot(1, 2, 2)
 plt.axis("off")
-plt.title("Result at level "+str(h))
+plt.title("Result at level "+str(h-1))
 plt.imshow(result_images[len(result_images)-1], cmap='gray')
 
 plt.show()
