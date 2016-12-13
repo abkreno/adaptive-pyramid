@@ -11,8 +11,12 @@ alpha         = 0.8
 min_contrast  = 90
 min_size      = 10
 h             = 0
-MAX_LEVEL     = 1
+MAX_LEVEL     = 3
+print("Enter the level to show the results at :")
+MAX_LEVEL     = int(input())
 path          = 'images/house.bmp'
+print("Enter the level to show the results at (e.g \"images/house.bmp\"): ")
+path          = input()
 input_image   = cv2.imread(path, 0)
 #input_image   = cv2.resize(input_image, (200, 200), interpolation=cv2.INTER_CUBIC)
 rows, cols    = input_image.shape
@@ -69,7 +73,7 @@ while(h < MAX_LEVEL):
                     #the cell is a noise
                     cell.mean = surv.mean
                     cell.val  = 0
-                surv.a    += cell.a - 1
+                surv.a    += cell.a
                 surv.mean  = (surv.a*surv.mean + cell.a*cell.mean) / surv.a
                 surv.var   = ( (surv.var+(surv.mean**2))*surv.a + (cell.var+(cell.mean**2))*cell.a ) / surv.a
                 surv.var  -= surv.mean**2
