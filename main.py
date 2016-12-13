@@ -8,7 +8,7 @@ from pprint import pprint
 from utils import has_more_candidates, min_mean, get_result_image
 
 alpha         = 0.4
-min_contrast  = 200
+min_contrast  = 120
 min_size      = 5
 h             = 0
 MAX_LEVEL     = 4
@@ -107,10 +107,13 @@ while(h < MAX_LEVEL):
 #pprint(result_images)
 fig = plt.figure()
 # for i in range(len(result_images)):
-#  fig.add_subplot(2, 2, i+1) # (width, height, count)
+#  fig.add_subplot(2, 2, i+1) # (height, width, count)
 #  plt.axis("off")
 #  plt.imshow(result_images[i], cmap='gray')
-fig.add_subplot(1, 1, 1) # (width, height, count)
+fig.add_subplot(1, 2, 1)
+plt.axis("off")
+plt.imshow(result_images[0], cmap='gray')
+fig.add_subplot(1, 2, 2)
 plt.axis("off")
 plt.imshow(result_images[len(result_images)-1], cmap='gray')
 
