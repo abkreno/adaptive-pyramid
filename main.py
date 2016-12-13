@@ -103,6 +103,8 @@ while(h < MAX_LEVEL):
             cell.q = True
             #cell.initVals()
             ngraph.append(cell)
+    print("number of the old cells:",len(graph))
+    print("number of the surviving:",len(ngraph))
     del graph[:]
     graph = ngraph
     h     = h + 1
