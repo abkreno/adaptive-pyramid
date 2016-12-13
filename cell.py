@@ -1,11 +1,11 @@
-# Only holds info about the segmant
+# Only holds info about the Cell
 # Don't calculate anything here
 
 
-class Segmant(object):
+class Cell(object):
 
     def __init__(self, index, row, col, val):
-        super(Segmant, self).__init__()
+        super(Cell, self).__init__()
         self.index   = index
         self.row     = row
         self.col     = col
@@ -30,7 +30,7 @@ class Segmant(object):
         self.p    = 0
         self.q    = True
         self.mean = self.val
-        self.a    = len(self.support)
+        self.a    = len(self.support) + 1
         for seg in self.support:
             self.mean += seg.val
         self.mean /= self.a

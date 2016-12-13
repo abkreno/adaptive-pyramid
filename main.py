@@ -3,7 +3,7 @@ from sys import stdout
 import numpy as np
 from math import exp
 from matplotlib import pyplot as plt
-from segmant import Segmant
+from Cell import Cell
 from pprint import pprint
 from utils import has_more_candidates, min_mean, get_result_image
 
@@ -16,7 +16,7 @@ path          = 'images/house.bmp'
 input_image   = cv2.imread(path, 0)
 #input_image   = cv2.resize(input_image, (200, 200), interpolation=cv2.INTER_CUBIC)
 rows, cols    = input_image.shape
-image         = [[Segmant(j + i * cols, i, j, 1.0 * input_image[i][j]) for j in range(cols)] for i in range(rows)]
+image         = [[Cell(j + i * cols, i, j, 1.0 * input_image[i][j]) for j in range(cols)] for i in range(rows)]
 result_images = [input_image]
 # Calculating (Mean, Variance, A, and Support) for each cell
 nRow          = [-1, -1, -1,  0,  0,  1,  1,  1]
@@ -104,9 +104,11 @@ fig = plt.figure()
 #  plt.imshow(result_images[i], cmap='gray')
 fig.add_subplot(1, 2, 1)
 plt.axis("off")
+plt.title("Original")
 plt.imshow(result_images[0], cmap='gray')
 fig.add_subplot(1, 2, 2)
 plt.axis("off")
+plt.title("Result at level "+str(h))
 plt.imshow(result_images[len(result_images)-1], cmap='gray')
 
 plt.show()
