@@ -8,14 +8,13 @@ from pprint import pprint
 from utils import has_more_candidates, min_mean, get_result_image
 
 alpha         = 0.4
-min_contrast  = 10
+min_contrast  = 200
 min_size      = 5
 h             = 0
-MAX_LEVEL     = 3
+MAX_LEVEL     = 4
 path          = 'images/house.bmp'
 input_image   = cv2.imread(path, 0)
-pprint(input_image.shape)
-input_image   = cv2.resize(input_image, (4, 3), interpolation=cv2.INTER_CUBIC)
+#input_image   = cv2.resize(input_image, (200, 200), interpolation=cv2.INTER_CUBIC)
 rows, cols    = input_image.shape
 image         = [[Segmant(j + i * cols, i, j, 1.0 * input_image[i][j]) for j in range(cols)] for i in range(rows)]
 result_images = [input_image]
@@ -32,6 +31,7 @@ for row in range(rows):
                 image[row][col].support.append(image[nrow][ncol])
         image[row][col].initVals()
         graph.append(image[row][col])
+    #print(image[row])
 while(h < MAX_LEVEL):
     # Extracting local/sub minima
     while has_more_candidates(graph):
@@ -80,6 +80,7 @@ while(h < MAX_LEVEL):
             for ncell in cell.support:
                 if(ncell.p == 1 and ncell.index != cell.parent.index):
                     cell.parent.support.append(ncell)
+                    ncell.support.append(cell.parent)
         elif(cell.p == 2):
             # if the cell is a root connect it to the surviving neighbours
             cell.p = 1
@@ -87,6 +88,7 @@ while(h < MAX_LEVEL):
             for ncell in cell.support:
                 if(ncell.p != 0):
                     nsupport.append(ncell)
+                    ncell.support.append(cell)
             del cell.support[:]
             cell.support = nsupport
     # keep only regions such that p = 1
@@ -96,15 +98,20 @@ while(h < MAX_LEVEL):
             cell.p = 0
             cell.q = True
             ngraph.append(cell)
+    print("old",len(graph))
+    print("new",len(ngraph))
     del graph[:]
     graph = ngraph
     h     = h + 1
-    result_images.append(get_result_image(image, input_image))
+    result_images.append(get_result_image(image, input_image, h))
 #pprint(result_images)
 fig = plt.figure()
-for i in range(len(result_images)):
- fig.add_subplot(2, 2, i+1) # (width, height, count)
- plt.axis("off")
- plt.imshow(result_images[i], cmap='gray')
+# for i in range(len(result_images)):
+#  fig.add_subplot(2, 2, i+1) # (width, height, count)
+#  plt.axis("off")
+#  plt.imshow(result_images[i], cmap='gray')
+fig.add_subplot(1, 1, 1) # (width, height, count)
+plt.axis("off")
+plt.imshow(result_images[len(result_images)-1], cmap='gray')
 
 plt.show()

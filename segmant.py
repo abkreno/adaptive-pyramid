@@ -24,7 +24,8 @@ class Segmant(object):
         for x in self.support:
              s+= ", ("+str(x.row)+","+str(x.col)+")"
         #return str(self.p) if self.parent == None else "L"
-        return str(self.val)
+        return str(int(self.mean))
+
     def initVals(self):
         self.p    = 0
         self.q    = True
