@@ -8,10 +8,10 @@ from pprint import pprint
 from utils import has_more_candidates, min_mean, get_result_image
 
 alpha         = 0.4
-min_contrast  = 120
-min_size      = 5
+min_contrast  = 200
+min_size      = 10
 h             = 0
-MAX_LEVEL     = 4
+MAX_LEVEL     = 2
 path          = 'images/house.bmp'
 input_image   = cv2.imread(path, 0)
 #input_image   = cv2.resize(input_image, (200, 200), interpolation=cv2.INTER_CUBIC)
@@ -64,17 +64,8 @@ while(h < MAX_LEVEL):
                 # the cell is a root
                 cell.p = 2
             else:
-                if(mean_diff > min_contrast):
-                    #the cell is a noise
-                    cell.mean = surv.mean
-                    cell.val  = 0
-                surv.a    += cell.a
-                surv.mean  = (surv.a*surv.mean + cell.a*cell.mean) / surv.a
-                surv.var   = ( (surv.var+(surv.mean**2))*surv.a + (cell.var+(cell.mean**2))*cell.a ) / surv.a
-                surv.var  -= surv.mean**2
                 cell.parent = surv
     # connect the nonsurviving to the surviving
-    # pprint(image)
     for cell in graph:
         if(cell.p == 0):
             for ncell in cell.support:
@@ -97,9 +88,10 @@ while(h < MAX_LEVEL):
         if(cell.p == 1):
             cell.p = 0
             cell.q = True
+            cell.initVals()
             ngraph.append(cell)
-    print("old",len(graph))
-    print("new",len(ngraph))
+    print("number of the old cells:",len(graph))
+    print("number of the surviving:",len(ngraph))
     del graph[:]
     graph = ngraph
     h     = h + 1
