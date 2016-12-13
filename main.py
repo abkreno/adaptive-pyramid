@@ -11,8 +11,8 @@ alpha         = 0.8
 min_contrast  = 90
 min_size      = 10
 h             = 0
-MAX_LEVEL     = 3
-path          = 'images/test-image1.jpg'
+MAX_LEVEL     = 1
+path          = 'images/house.bmp'
 input_image   = cv2.imread(path, 0)
 #input_image   = cv2.resize(input_image, (200, 200), interpolation=cv2.INTER_CUBIC)
 rows, cols    = input_image.shape
@@ -65,6 +65,14 @@ while(h < MAX_LEVEL):
                 cell.p = 2
             else:
                 # connect the nonsurviving to the surviving
+                if(mean_diff > min_contrast):
+                    #the cell is a noise
+                    cell.mean = surv.mean
+                    cell.val  = 0
+                surv.a    += cell.a - 1
+                surv.mean  = (surv.a*surv.mean + cell.a*cell.mean) / surv.a
+                surv.var   = ( (surv.var+(surv.mean**2))*surv.a + (cell.var+(cell.mean**2))*cell.a ) / surv.a
+                surv.var  -= surv.mean**2
                 cell.parent = surv
     # connecting the surviving cells to each other
     for cell in graph:
@@ -89,7 +97,7 @@ while(h < MAX_LEVEL):
         if(cell.p == 1):
             cell.p = 0
             cell.q = True
-            cell.initVals()
+            #cell.initVals()
             ngraph.append(cell)
     del graph[:]
     graph = ngraph
@@ -107,7 +115,7 @@ plt.title("Original")
 plt.imshow(result_images[0], cmap='gray')
 fig.add_subplot(1, 2, 2)
 plt.axis("off")
-plt.title("Result at level "+str(h-1))
+plt.title("Result at level "+str(h))
 plt.imshow(result_images[len(result_images)-1], cmap='gray')
 
 plt.show()
